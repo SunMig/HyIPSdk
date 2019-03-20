@@ -1,0 +1,62 @@
+
+apply plugin: 'com.android.library'
+android{
+    lintOptions {
+        abortOnError false
+    }
+}
+android {
+    compileSdkVersion 25
+    buildToolsVersion "28.0.1"
+    defaultConfig {
+        applicationId "com.bjx.cumt.hyipsdk"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:appcompat-v7:25.+'
+    testCompile 'junit:junit:4.12'
+}
+task makeJar(type: proguard.gradle.ProGuardTask, dependsOn: "build") {
+    //删除已有的jar包
+    delete 'build/outputs/ips.jar'
+    // 未混淆的jar路径
+    injars 'build/intermediates/bundles/release/classes.jar'
+// 混淆后的jar输出路径
+    outjars 'build/outputs/ips.jar'
+    // 混淆协议
+    configuration 'proguard-rules.pro'
+}
+
+//
+//task makeJar(type: Copy) {
+//    //删除存在的
+//    delete 'build/libs/hybsdk.jar'
+//    //设置拷贝的文件
+//    from('build/intermediates/bundles/release/')
+//    //打进jar包后的文件目录
+//    into('build/libs/')
+//    //去掉不需要打包的目录和文件
+//    include('classes.jar')
+//    //重命名
+//    rename ('classes.jar', 'hybsdk.jar')
+//}
+//
+//makeJar.dependsOn(build)
+
